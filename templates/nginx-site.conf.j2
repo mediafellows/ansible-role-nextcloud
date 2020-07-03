@@ -1,0 +1,116 @@
+# {{ ansible_managed }}
+# Nginx Site config for Nextcloud, using FPM for PHP
+# Initially taken from https://github.com/GSquad934/ansible-role-nextcloud/blob/master/templates/nextcloud-nginx.conf
+# Which I guess was also inspired by https://www.linuxbabe.com/ubuntu/install-nextcloud-11-ubuntu-16-04-nginx-config
+
+# Provides the PHP handler through the FPM socket (used in server config below)
+upstream php-handler {
+  server unix:{{ nextcloud_fpm_socket }};
+}
+
+# Does NO TLS/HTTPs handling here as this is designed to run behind a Loadbalancer that
+# offloads TLS connections
+# So this only responds to port 80, but still forwards to https to upgrade connections made to the Loabalancer
+server {
+  listen 80;
+  server_name {{ nextcloud_domain }};
+
+  # Forward to HTTPS
+  if ({{ client_protocol_header }} = 'http') {
+    return 301 https://$server_name$request_uri;
+  }
+
+  # Set some security headers
+  add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
+  add_header X-Content-Type-Options nosniff;
+  add_header X-XSS-Protection "1; mode=block";
+  add_header X-Robots-Tag none;
+  add_header X-Download-Options noopen;
+  add_header X-Permitted-Cross-Domain-Policies none;
+
+  # Path to the root of your installation
+  root {{ nextcloud_install_dir }};
+
+  location = /robots.txt {
+    allow all;
+    log_not_found off;
+    access_log off;
+  }
+
+  # Set max upload size
+  client_max_body_size 512M;
+  fastcgi_buffers 64 4K;
+
+  # Enable gzip but do not remove ETag headers
+  gzip on;
+  gzip_vary on;
+  gzip_comp_level 4;
+  gzip_min_length 256;
+  gzip_proxied expired no-cache no-store private no_last_modified no_etag auth;
+  gzip_types application/atom+xml application/javascript application/json application/ld+json application/manifest+json application/rss+xml application/vnd.geo+json application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/bmp image/svg+xml image/x-icon text/cache-manifest text/css text/plain text/vcard text/vnd.rim.location.xloc text/vtt text/x-component text/x-cross-domain-policy;
+
+  # Bunch of rewrite rules for Nextcloud features
+
+  location = /.well-known/carddav {
+    return 301 $scheme://$host/remote.php/dav;
+  }
+
+  location = /.well-known/caldav {
+    return 301 $scheme://$host/remote.php/dav;
+  }
+
+  # Forward base path to index.php
+  location / {
+    rewrite ^ /index.php$uri;
+  }
+
+  # hide potenially sensitive files
+  location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+    deny all;
+  }
+
+  location ~ ^/(?:\.|autotest|occ|issue|indie|db_|console) {
+    deny all;
+  }
+
+  # Enable PHP through fastcgi
+  location ~ ^/(?:index|remote|public|cron|core/ajax/update|status|ocs/v[12]|updater/.+|ocs-provider/.+)\.php(?:$|/) {
+    fastcgi_split_path_info ^(.+\.php)(/.*)$;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param HTTPS on;
+    # Avoid sending the security headers twice
+    fastcgi_param modHeadersAvailable true;
+    fastcgi_param front_controller_active true;
+    fastcgi_pass php-handler;
+    fastcgi_intercept_errors on;
+    fastcgi_request_buffering off;
+  }
+
+  # S.th. for the updater?
+  location ~ ^/(?:updater|ocs-provider)(?:$|/) {
+    try_files $uri/ =404;
+    index index.php;
+  }
+
+  # Adding the cache control header for js and css files
+  # Make sure it is BELOW the PHP block
+  location ~ \.(?:css|js|woff|svg|gif)$ {
+    try_files $uri /index.php$uri$is_args$args;
+    add_header Cache-Control "public, max-age=15778463";
+    # Optional: Don't log access for those files
+    access_log off;
+  }
+
+  # Find files
+  location ~ \.(?:png|html|ttf|ico|jpg|jpeg)$ {
+    try_files $uri /index.php$uri$is_args$args;
+    # Optional: Don't log access to those files
+    access_log off;
+  }
+
+  # Request Logging
+  access_log {{nginx_log_dir}}/{{ nextcloud_domain }}.access.log custom_access_log_format;
+  error_log {{nginx_log_dir}}/{{ nextcloud_domain }}.error.log;
+}

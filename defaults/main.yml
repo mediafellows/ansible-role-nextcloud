@@ -1,2 +1,26 @@
 ---
 # defaults file for mediafellows.nextcloud
+
+nextcloud_install_dir: /opt/nextcloud
+nextcloud_php_version: php7.2
+
+# === Nginx settings: ==
+# All the following settings will eventually be passed on to the mediafellows.nginx role.
+
+# /run or /var/run?
+nextcloud_fpm_socket: /run/php/{{ nextcloud_php_version }}-fpm.sock
+
+nextcloud_domain: dummy-domain.com
+# mark this apps Nginx as default server, should only be one per Nginx instance!
+nginx_default_server: false
+nginx_log_dir: /var/log/nginx
+nginx_access_log_format: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" real_ip=$http_x_forwarded_for msec=$msec connection=$connection connection_requests=$connection_requests millis=$request_time'
+# max request body size Nginx allows (default 1MB)
+nginx_client_body_size: 1m
+# keep other nginx sites configured outside of this role/in another instance of this role
+keep_only_specified: false
+
+# Header that holds the protocol (http/https) of the clients request
+# if behind a loadbalancer that does SSL offloading you usually use
+# http_x_forwarded_proto otherwise scheme.
+client_protocol_header: 'http_x_forwarded_proto'

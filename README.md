@@ -1,38 +1,50 @@
-# Ansible Role 
-=========
+# Ansible for Nextcloud Server setup
 
-A brief description of the role goes here.
+Ansible Role that sets up Nextcloud (with Nginx) on an Ubuntu/Debian server. Unlike other Ansibel roles for Nextcloud this role doesn't install any Databases.
 
-Requirements
-------------
+This role installs PHP debendencies and  installs the PHP runner FastCGI Process Manager ([FPM](https://www.php.net/manual/de/install.fpm.php)).
+It also utilizes [mediafellows.nginx](https://github.com/mediafellows/ansible-role-nginx) role for installing Ngxinx as a Websterver.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+For installing Webservers, Databases etc use other roles, such as
+- [mediafellows.postgresql](https://github.com/mediafellows/ansible-role-postgresql)
 
-Role Variables
---------------
+Or any other Role that fits your needs (like MySQL, MariaDB, Redis or other PosgreSQL roles).
+This also allows for you to run Databases like Relational DB and Redis on other hosts for example. Which would be common if you have managed DBs in a cloud environment.
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Requirements
 
-Dependencies
-------------
+Linux Distribution with apt package manager. Ideally newer versions (like Ubuntu 18.04) that provide php7.2 as part of their repos.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Role Variables
 
-Example Playbook
-----------------
+Role variables that make sense to override to your needs:
+- `nextcloud_install_dir` - Install dir where Nextcloud will be unpacked
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Find more variables in defaults/main.yml
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## Dependencies
 
-License
--------
+Depends on the mediafellows.nginx role for setting up the Webserver:
+
+- [mediafellows.nginx](https://github.com/mediafellows/ansible-role-nginx)
+
+## Example Playbook
+
+Example playbook integration
+
+```yaml
+- name: Install Nextcloud
+  hosts: nextcloud_hosts
+  vars:
+    nextcloud_install_dir: /opt/nextcloud/
+  roles:
+    - mediafellows.nextcloud
+```
+
+## License
 
 BSD
 
-Author Information
-------------------
+## Author Information
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Stefan Horning <stefan.horning@mediafellows.com>

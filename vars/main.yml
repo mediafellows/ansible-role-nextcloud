@@ -1,2 +1,22 @@
 ---
 # vars file for mediafellows.nextcloud
+
+# Nginx server settings for mediafellows.nginx:
+nginx_http_params:
+  - sendfile on
+  - tcp_nopush on
+  - tcp_nodelay on
+  - keepalive_timeout 65
+  - keepalive_requests 200
+  - types_hash_max_size 2048
+  - ssl_protocols TLSv1 TLSv1.1 TLSv1.2
+  - ssl_prefer_server_ciphers on
+  - gzip on
+  - gzip_disable "msie6"
+  - server_tokens off
+  - log_format custom_access_log_format '{{ nginx_access_log_format }}'
+  - access_log "{{nginx_log_dir}}/access.log"
+  - error_log "{{nginx_log_dir}}/error.log"
+nginx_sites:
+  - name: nextcloud
+    template_file: '../templates/nginx-site.conf.j2'
