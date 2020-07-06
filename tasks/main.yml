@@ -3,3 +3,12 @@
 
 - import_playbook: php_setup.yml
 - import_playbook: nextcloud_setup.yml
+
+- name: Trigger all notify handlers
+  meta: flush_handlers
+
+- name: Enable PHP FPM service
+  service:
+    name: {{ nextcloud_php_version }}-fpm
+    state: started
+    enabled: true

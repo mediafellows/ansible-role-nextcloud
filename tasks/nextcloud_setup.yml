@@ -1,0 +1,32 @@
+---
+
+- name: Download Nextcloud version {{ nextcloud_version }}
+  get_url:
+    src: 'https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.zip'
+    dest: '/tmp/nextcloud.zip'
+
+- name: Make sure Nextcloud install dir exists
+  file:
+    path: '{{ nextcloud_install_dir }}'
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: Unzip Nextcloud to install dir
+  unarchive:
+    src: /tmp/nextcloud.zip
+    dest: '{{ nextcloud_install_dir }}'
+    owner: www-data
+    group: www-data
+
+#- name: Copy config.php into place for initial setup
+#  template:
+#    src: nextcloud-config.php.j2
+#    dest: '{{ nextcloud_install_dir }}/config/config.php'
+
+- name: Setup Nextcloud Data dir (for storing uploaded files) with Ngxinx permissions
+  file:
+    path: '{{ nextcloud_data_dir }}'
+    state: directory
+    owner: www-data
+    group: www-data

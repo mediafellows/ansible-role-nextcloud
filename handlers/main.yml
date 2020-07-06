@@ -1,2 +1,7 @@
 ---
 # handlers file for mediafellows.nextcloud
+
+- name: restart php-fpm
+  service:
+    name: {{ nextcloud_php_version }}-fpm
+    state: restarted
