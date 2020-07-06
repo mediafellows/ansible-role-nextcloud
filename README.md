@@ -38,6 +38,7 @@ Example playbook integration
 ```yaml
 - name: Install Nextcloud
   hosts: nextcloud_hosts
+  become: true
   vars:
     nextcloud_version: 19.0.0
     nextcloud_install_dir: /opt/nextcloud/

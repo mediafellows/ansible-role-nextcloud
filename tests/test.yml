@@ -1,5 +1,8 @@
 ---
-- hosts: localhost
-  remote_user: root
+- name: Test Play for Nextcloud role
+  hosts: localhost
+  become: true
+  vars:
+    nextcloud_version: 19.0.0
   roles:
     - ansible-role-nextcloud
