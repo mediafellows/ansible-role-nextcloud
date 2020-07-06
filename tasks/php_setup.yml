@@ -4,20 +4,20 @@
   apt:
     name:
       # Essential PHP packages
-      - {{ nextcloud_php_version }}-common
-      - {{ nextcloud_php_version }}-fpm
-      - {{ nextcloud_php_version }}-cgi
-      - {{ nextcloud_php_version }}-cli
-      - php-common
+      - '{{ nextcloud_php_version }}-common'
+      - '{{ nextcloud_php_version }}-fpm'
+      - '{{ nextcloud_php_version }}-cgi'
+      - '{{ nextcloud_php_version }}-cli'
+      - 'php-common'
       # Extra modules
-      - {{ nextcloud_php_version }}-curl
-      - {{ nextcloud_php_version }}-gd
-      - {{ nextcloud_php_version }}-json
-      - {{ nextcloud_php_version }}-mbstring
-      - {{ nextcloud_php_version }}-opcache
-      - {{ nextcloud_php_version }}-readline
-      - {{ nextcloud_php_version }}-xml
-      - {{ nextcloud_php_version }}-pgsql
+      - '{{ nextcloud_php_version }}-curl'
+      - '{{ nextcloud_php_version }}-gd'
+      - '{{ nextcloud_php_version }}-json'
+      - '{{ nextcloud_php_version }}-mbstring'
+      - '{{ nextcloud_php_version }}-opcache'
+      - '{{ nextcloud_php_version }}-readline'
+      - '{{ nextcloud_php_version }}-xml'
+      - '{{ nextcloud_php_version }}-pgsql'
     state: present
   register:
     - restart php-fpm

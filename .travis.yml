@@ -10,7 +10,7 @@ before_install:
 
 install:
   # Install ansible
-  - pip3 install ansible
+  - pip3 install ansible yamllint
 
   # Add role dependency (mediafellows.nginx)
   - wget -O mediafellows.nginx.zip https://github.com/mediafellows/ansible-role-nginx/archive/master.zip && unzip mediafellows.nginx.zip
@@ -25,10 +25,13 @@ install:
   - ansible --version
 
 script:
-  # Basic role syntax check
+  # Basic linting with yamllint
+  - yamllint .
+
+  # Ansible role syntax check
   - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
 
-  # Run the role/playbook with ansible-playbook.
+  # Run the test playbook with ansible-playbook
   - ansible-playbook -i tests/inventory tests/test.yml --connection=local
 
 
