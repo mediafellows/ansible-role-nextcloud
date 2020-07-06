@@ -1,4 +1,5 @@
 ---
 # tasks file for mediafellows.nextcloud
 
-# TODO: install PHP and Nextcloud
+- import_playbook: php_setup.yml
+- import_playbook: nextcloud_setup.yml
