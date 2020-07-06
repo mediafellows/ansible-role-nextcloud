@@ -19,5 +19,5 @@
       - '{{ nextcloud_php_version }}-xml'
       - '{{ nextcloud_php_version }}-pgsql'
     state: present
-  register:
+  notify:
     - restart php-fpm
