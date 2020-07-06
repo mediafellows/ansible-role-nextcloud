@@ -1,29 +1,36 @@
 ---
+sudo: required
+dist: xenial
+
 language: python
-python: "2.7"
+python: "3.5"
 
-# Use the new container infrastructure
-sudo: false
-
-# Install ansible
-addons:
-  apt:
-    packages:
-    - python-pip
+before_install:
+  - sudo apt-get update -qq
 
 install:
   # Install ansible
-  - pip install ansible
+  - pip3 install ansible
 
-  # Check ansible version
-  - ansible --version
+  # Add role dependency (mediafellows.nginx)
+  - wget -O mediafellows.nginx.zip https://github.com/mediafellows/ansible-role-nginx/archive/master.zip && unzip mediafellows.nginx.zip
+  - rm mediafellows.nginx.zip
+  - mv ansible-role-nginx-master tests/roles/mediafellows.nginx
 
   # Create ansible.cfg with correct roles_path
-  - printf '[defaults]\nroles_path=../' >ansible.cfg
+  - printf '[defaults]\nroles_path=../' > ansible.cfg
+
+  # Debug output
+  - ls tests/roles
+  - ansible --version
 
 script:
   # Basic role syntax check
-  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+
+  # Run the role/playbook with ansible-playbook.
+  - ansible-playbook -i tests/inventory tests/test.yml --connection=local
+
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
