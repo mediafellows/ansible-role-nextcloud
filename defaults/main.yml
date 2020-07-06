@@ -30,6 +30,6 @@ nginx_client_body_size: 1m
 keep_only_specified: false
 
 # Header that holds the protocol (http/https) of the clients request
-# if behind a loadbalancer that does SSL offloading you usually use
-# $http_x_forwarded_proto otherwise $scheme in the Nginx condition.
-client_protocol_header: '$http_x_forwarded_proto'
+# if behind a loadbalancer that does TLS offloading you usually use
+# http_x_forwarded_proto otherwise scheme.
+client_protocol_header: 'http_x_forwarded_proto'
