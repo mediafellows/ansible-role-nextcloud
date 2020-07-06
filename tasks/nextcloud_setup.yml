@@ -2,7 +2,7 @@
 
 - name: Download Nextcloud version {{ nextcloud_version }}
   get_url:
-    src: 'https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.zip'
+    url: 'https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.zip'
     dest: '/tmp/nextcloud.zip'
 
 - name: Make sure Nextcloud install dir exists
