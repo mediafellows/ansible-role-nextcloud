@@ -1,8 +1,9 @@
 ---
 # tasks file for mediafellows.nextcloud
 
-- include_tasks: php_setup.yml
-- include_tasks: nextcloud_setup.yml
+- import_tasks: php_setup.yml
+
+- import_tasks: nextcloud_setup.yml
 
 - name: Trigger all notify handlers
   meta: flush_handlers
