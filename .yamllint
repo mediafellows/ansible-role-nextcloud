@@ -4,6 +4,7 @@ extends: default
 
 ignore: |
   .github/workflows/*
+  tests/roles/
 
 rules:
   document-start: disable
