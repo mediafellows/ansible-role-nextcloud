@@ -16,6 +16,7 @@
   unarchive:
     src: /tmp/nextcloud.zip
     dest: '{{ nextcloud_install_dir }}'
+    remote_src: true
     owner: www-data
     group: www-data
 
