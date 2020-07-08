@@ -22,6 +22,8 @@ Role variables that make sense to override to your needs (shows default settings
 - `nextcloud_install_dir: /opt/nextcloud` - Install dir where Nextcloud will be unpacked
 - `nextcloud_version: 19.0.0` - Nextcloud version to install, pick one that can be downloaded from download server already
 - `nextcloud_php_version: php7.2` - PHP version to install. Ensure this version is in the apt repo of your distro already (this role won't add any additional repos)
+- `nextcloud_intance_id: 'xxx12312'` - Unique identifier for Nextcloud installation
+- `nextcloud_db_pass: 1231231` - PW for DB access
 
 Find more variables in defaults/main.yml
 

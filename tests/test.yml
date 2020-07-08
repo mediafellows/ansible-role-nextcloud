@@ -4,5 +4,6 @@
   become: true
   vars:
     nextcloud_version: 19.0.0
+    nextcloud_instance_id: '123abcdefg90'
   roles:
     - ansible-role-nextcloud
