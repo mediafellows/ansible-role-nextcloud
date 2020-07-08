@@ -37,8 +37,8 @@ describe 'Nextcloud setup' do
 
   describe file('/opt/nextcloud/config/config.php') do
     it { should be_file }
-    it { should be_owned_by('www-data') }
-    it { should be_grouped_into('www-data') }
+    it { should be_owned_by('root') }
+    it { should be_grouped_into('root') }
   end
 
   describe service("php7.4-fpm") do
