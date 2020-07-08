@@ -20,6 +20,10 @@
   set_fact:
     nextcloud_needs_install: "{{ has_version.changed|bool }}"
 
+- name: Output if install needed
+  debug:
+    var: nextcloud_needs_install
+
 - name: Unzip Nextcloud package (contains nextcloud dir)
   unarchive:
     src: /tmp/nextcloud.zip

@@ -34,7 +34,8 @@ script:
   # Run the test playbook with ansible-playbook
   - ansible-playbook -i tests/inventory tests/test.yml --connection=local
 
-  - ls /opt/nextcloud
+  - ls /opt/
+  - ls /tmp/
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
