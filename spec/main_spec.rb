@@ -3,11 +3,8 @@ require 'spec_helper'
 describe 'Nginx setup' do
   nginx_conf_dir = '/etc/nginx'
 
- describe file("#{nginx_conf_dir}/nginx.conf") do
+  describe file("#{nginx_conf_dir}/nginx.conf") do
     it { should be_file }
-    config_string = ANSIBLE_VARS.fetch('nginx_http_params', 'FAIL').join(";\n  ")
-    config_string.gsub!(/{{(.+)}}/){ ANSIBLE_VARS.fetch($1, 'NOT FOUND') }
-    its(:content) { should include("  #{config_string}") }
   end
 
   describe file("#{nginx_conf_dir}/sites-available/") do
@@ -35,6 +32,12 @@ end
 describe 'Nextcloud setup' do
   describe file('/opt/nextcloud') do
     it { should be_directory }
+    it { should be_owned_by('www-data') }
+    it { should be_grouped_into('www-data') }
+  end
+
+  describe file('/opt/nextcloud/config/config.php') do
+    it { should be_file }
     it { should be_owned_by('www-data') }
     it { should be_grouped_into('www-data') }
   end
