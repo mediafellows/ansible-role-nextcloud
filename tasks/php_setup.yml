@@ -35,7 +35,7 @@
 - name: Install DB specifig PHP package PostgreSQL
   apt:
     name: '{{ nextcloud_php_version }}-pgsql'
-  state: present
+    state: present
   when: nextcloud_db_type == 'postgresql'
   notify:
     - restart php-fpm
@@ -43,7 +43,7 @@
 - name: Install DB specifig PHP package for MySQL
   apt:
     name: '{{ nextcloud_php_version }}-mysql'
-  state: present
+    state: present
   when: nextcloud_db_type == 'mysql'
   notify:
     - restart php-fpm
