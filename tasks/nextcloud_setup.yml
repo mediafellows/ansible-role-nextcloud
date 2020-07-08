@@ -20,6 +20,10 @@
   set_fact:
     nextcloud_needs_install: "{{ has_version.changed|bool }}"
 
+- set_fact:
+    nextcloud_needs_install: true
+  when: has_version.failed
+
 - name: Output if install needed
   debug:
     var: nextcloud_needs_install
