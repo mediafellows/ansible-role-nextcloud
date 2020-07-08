@@ -58,6 +58,9 @@
   template:
     src: nextcloud-config.php.j2
     dest: '{{ nextcloud_install_dir }}/config/config.php'
+    mode: 0640
+    owner: www-data
+    owner: www-data
 
 - name: Setup Nextcloud Data dir (for storing uploaded files) with Ngxinx permissions
   file:

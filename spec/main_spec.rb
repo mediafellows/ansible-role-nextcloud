@@ -21,7 +21,6 @@ describe 'Nginx setup' do
 
   describe file("#{nginx_conf_dir}/sites-enabled/nextcloud.conf") do
     it { should be_file }
-    it { should be_grouped_into('www-data') }
   end
 
   describe service("nginx") do
