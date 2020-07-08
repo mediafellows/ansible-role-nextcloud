@@ -24,6 +24,10 @@ install:
   - ls tests/roles
   - ansible --version
 
+  # Setup ruby to run serverspec tests
+  - sudo ruby -v
+  - sudo gem install serverspec
+
 script:
   # Basic linting with yamllint
   - yamllint .
@@ -34,8 +38,10 @@ script:
   # Run the test playbook with ansible-playbook
   - ansible-playbook -i tests/inventory tests/test.yml --connection=local
 
-  - ls /opt/
-  - ls /tmp/
+  - ls /opt/nextcloud/
+
+  # Run serverspec as root to be able to test everything
+  - sudo rake spec
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
