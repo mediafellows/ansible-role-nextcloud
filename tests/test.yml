@@ -3,7 +3,6 @@
   hosts: localhost
   become: true
   vars:
-    nextcloud_php_version: php7.0
     nextcloud_version: 19.0.0
   roles:
     - ansible-role-nextcloud

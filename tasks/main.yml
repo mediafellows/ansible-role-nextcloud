@@ -10,6 +10,6 @@
 
 - name: Enable PHP FPM service
   service:
-    name: '{{ nextcloud_php_version }}-fpm'
+    name: 'php{{ nextcloud_php_version }}-fpm'
     state: started
     enabled: true

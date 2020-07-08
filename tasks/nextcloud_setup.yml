@@ -5,11 +5,27 @@
     url: 'https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.zip'
     dest: '/tmp/nextcloud.zip'
 
+- name: Test if requested version is already installed
+  lineinfile:
+    path: "{{ nextcloud_install_dir }}/version.php"
+    line: "$OC_VersionString = '19.0.0';"
+    state: present
+    # only check if line would be added (when not present yet)
+    check_mode: true
+    # ingore errors, like when file doesn't exist yet
+    ignore_errors: true
+  register: has_version
+
+- name: Set variable to determine if update/install needed
+  set_fact:
+    nextcloud_needs_install: "{{ has_version.changed|bool }}"
+
 - name: Unzip Nextcloud package (contains nextcloud dir)
   unarchive:
     src: /tmp/nextcloud.zip
     dest: /tmp/
     remote_src: true
+  when: nextcloud_needs_install
 
 - name: Make sure Nextcloud install dir exists
   file:
@@ -17,6 +33,7 @@
     state: directory
     owner: www-data
     group: www-data
+  when: nextcloud_needs_install
 
 - name: Move unzipped nextloud dir to install dir
   copy:
@@ -25,6 +42,7 @@
     remote_src: true
     owner: www-data
     group: www-data
+  when: nextcloud_needs_install
 
 - name: Cleanup install files
   file:

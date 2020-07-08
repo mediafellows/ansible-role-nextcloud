@@ -1,9 +1,6 @@
 # {{ ansible_managed }}
 # Nginx Site config for Nextcloud, using FPM for PHP
-# Initially taken from https://github.com/GSquad934/ansible-role-nextcloud/blob/master/templates/nextcloud-nginx.conf
-# Which I guess was also inspired by https://www.linuxbabe.com/ubuntu/install-nextcloud-11-ubuntu-16-04-nginx-config
-
-# official docs: https://docs.nextcloud.com/server/15/admin_manual/installation/nginx.html
+# Mostly taken from https://docs.nextcloud.com/server/19/admin_manual/installation/nginx.html
 
 # Provides the PHP handler through the FPM socket (used in server config below)
 upstream php-handler {
@@ -22,21 +19,37 @@ server {
     return 301 https://$server_name$request_uri;
   }
 
-  # Set some security headers
+  # Set some security headers for the Browser
   add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
-  add_header X-Content-Type-Options nosniff;
-  add_header X-XSS-Protection "1; mode=block";
-  add_header X-Robots-Tag none;
-  add_header X-Download-Options noopen;
-  add_header X-Permitted-Cross-Domain-Policies none;
+  add_header Referrer-Policy "no-referrer" always;
+  add_header X-Content-Type-Options "nosniff" always;
+  add_header X-Download-Options "noopen" always;
+  add_header X-Frame-Options "SAMEORIGIN" always;
+  add_header X-Permitted-Cross-Domain-Policies "none" always;
+  add_header X-Robots-Tag "none" always;
+  add_header X-XSS-Protection "1; mode=block" always;
+  
+  # Remove X-Powered-By, which is an information leak
+  fastcgi_hide_header X-Powered-By;
 
-  # Path to the root of your installation
+  # Path to the root of the Nextcloud installation
   root {{ nextcloud_install_dir }};
 
+  # Don't log robots.txt lookups
   location = /robots.txt {
     allow all;
     log_not_found off;
     access_log off;
+  }
+
+  # Cardav/ Caldav redirects 
+  
+  location = /.well-known/carddav {
+    return 301 https://$host/remote.php/dav;
+  }
+
+  location = /.well-known/caldav {
+    return 301 htpps://$host/remote.php/dav;
   }
 
   # Set max upload size
@@ -51,65 +64,58 @@ server {
   gzip_proxied expired no-cache no-store private no_last_modified no_etag auth;
   gzip_types application/atom+xml application/javascript application/json application/ld+json application/manifest+json application/rss+xml application/vnd.geo+json application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/bmp image/svg+xml image/x-icon text/cache-manifest text/css text/plain text/vcard text/vnd.rim.location.xloc text/vtt text/x-component text/x-cross-domain-policy;
 
-  # Bunch of rewrite rules for Nextcloud features
-
-  location = /.well-known/carddav {
-    return 301 $scheme://$host/remote.php/dav;
-  }
-
-  location = /.well-known/caldav {
-    return 301 $scheme://$host/remote.php/dav;
-  }
-
-  # Forward base path to index.php
+  # Rewrite base path to index.php
   location / {
-    rewrite ^ /index.php$uri;
+    rewrite ^ /index.php;
   }
 
-  # hide potenially sensitive files
-  location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+  # Hide potenially sensitive files
+  location ~ ^\/(?:build|tests|config|lib|3rdparty|templates|data)\/ {
     deny all;
   }
-
-  location ~ ^/(?:\.|autotest|occ|issue|indie|db_|console) {
+  location ~ ^\/(?:\.|autotest|occ|issue|indie|db_|console) {
     deny all;
   }
-
+    
   # Enable PHP through fastcgi
-  location ~ ^/(?:index|remote|public|cron|core/ajax/update|status|ocs/v[12]|updater/.+|ocs-provider/.+)\.php(?:$|/) {
-    fastcgi_split_path_info ^(.+\.php)(/.*)$;
+  location ~ ^\/(?:index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[ms]-provider\/.+|.+\/richdocumentscode\/proxy)\.php(?:$|\/) {
+    fastcgi_split_path_info ^(.+?\.php)(\/.*|)$;
+    set $path_info $fastcgi_path_info; 
     try_files $fastcgi_script_name =404;
     include fastcgi_params;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param PATH_INFO $path_info;
     fastcgi_param REQUEST_SCHEME ${{ client_protocol_header }};
+    fastcgi_param HTTPS on;
     # Avoid sending the security headers twice
     fastcgi_param modHeadersAvailable true;
+    # Enable pretty urls
     fastcgi_param front_controller_active true;
+    # Pass requests for FPM CGI server
     fastcgi_pass php-handler;
     fastcgi_intercept_errors on;
     fastcgi_request_buffering off;
   }
 
   # S.th. for the updater?
-  location ~ ^/(?:updater|ocs-provider)(?:$|/) {
-    try_files $uri/ =404;
-    index index.php;
+  location ~ ^\/(?:updater|oc[ms]-provider)(?:$|\/) {
+      try_files $uri/ =404;
+      index index.php;
   }
 
-  # Adding the cache control header for js and css files
+  # Adding the cache control header for JS and CSS files
   # Make sure it is BELOW the PHP block
-  location ~ \.(?:css|js|woff|svg|gif)$ {
-    try_files $uri /index.php$uri$is_args$args;
+  location ~ \.(?:css|js|woff2?|svg|gif|map)$ {
+    try_files $uri /index.php$request_uri;
     add_header Cache-Control "public, max-age=15778463";
     # Optional: Don't log access for those files
     access_log off;
   }
 
   # Find files
-  location ~ \.(?:png|html|ttf|ico|jpg|jpeg)$ {
-    try_files $uri /index.php$uri$is_args$args;
-    # Optional: Don't log access to those files
+  location ~ \.(?:png|html|ttf|ico|jpg|jpeg|bcmap|mp4|webm)$ {
+    try_files $uri /index.php$request_uri;
+    # Optional: Don't log access to other assets
     access_log off;
   }
 
