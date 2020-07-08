@@ -25,7 +25,7 @@ php_memory_limit: 512M
 # All the following settings will eventually be passed on to the mediafellows.nginx role.
 
 # /run or /var/run?
-nextcloud_fpm_socket: /run/php/{{ nextcloud_php_version }}-fpm.sock
+nextcloud_fpm_socket: /run/php/php{{ nextcloud_php_version }}-fpm.sock
 
 nextcloud_domain: dummy-domain.com
 # mark this apps Nginx as default server, should only be one per Nginx instance!
