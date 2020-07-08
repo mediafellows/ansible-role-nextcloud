@@ -1,23 +1,57 @@
 ---
 
+- name: Add PHP PPA to allow installing of all recent PHP version
+  apt_repository:
+    repo: ppa:ondrej/php
+    update_cache: true
+    state: present
+
 - name: Install PHP packages needed to run Nextcloud through Apt
   apt:
     name:
       # Essential PHP packages
-      - '{{ nextcloud_php_version }}-common'
-      - '{{ nextcloud_php_version }}-fpm'
-      - '{{ nextcloud_php_version }}-cgi'
-      - '{{ nextcloud_php_version }}-cli'
+      - 'php{{ nextcloud_php_version }}-common'
+      - 'php{{ nextcloud_php_version }}-fpm'
+      - 'php{{ nextcloud_php_version }}-cgi'
+      - 'php{{ nextcloud_php_version }}-cli'
       - 'php-common'
       # Extra modules
-      - '{{ nextcloud_php_version }}-curl'
-      - '{{ nextcloud_php_version }}-gd'
-      - '{{ nextcloud_php_version }}-json'
-      - '{{ nextcloud_php_version }}-mbstring'
-      - '{{ nextcloud_php_version }}-opcache'
-      - '{{ nextcloud_php_version }}-readline'
-      - '{{ nextcloud_php_version }}-xml'
-      - '{{ nextcloud_php_version }}-pgsql'
+      - 'php{{ nextcloud_php_version }}-curl'
+      - 'php{{ nextcloud_php_version }}-gd'
+      - 'php{{ nextcloud_php_version }}-json'
+      - 'php{{ nextcloud_php_version }}-mbstring'
+      - 'php{{ nextcloud_php_version }}-opcache'
+      - 'php{{ nextcloud_php_version }}-readline'
+      - 'php{{ nextcloud_php_version }}-xml'
+      - 'php{{ nextcloud_php_version }}-zip'
+      - 'php{{ nextcloud_php_version }}-intl'
+      - 'php{{ nextcloud_php_version }}-bcmath'
+      - 'php{{ nextcloud_php_version }}-gmp'
+      - php-imagick
     state: present
+  notify:
+    - restart php-fpm
+
+- name: Install DB specifig PHP package PostgreSQL
+  apt:
+    name: '{{ nextcloud_php_version }}-pgsql'
+  state: present
+  when: nextcloud_db_type == 'postgresql'
+  notify:
+    - restart php-fpm
+
+- name: Install DB specifig PHP package for MySQL
+  apt:
+    name: '{{ nextcloud_php_version }}-mysql'
+  state: present
+  when: nextcloud_db_type == 'mysql'
+  notify:
+    - restart php-fpm
+
+- name: Update Memory limit in PHP ini
+  lineinfile:
+    path: /etc/php/{{ nextcloud_php_version }}/fpm/php.ini
+    regex: '^memory_limit ='
+    line: "memory_limit = {{ php_memory_limit }}"
   notify:
     - restart php-fpm

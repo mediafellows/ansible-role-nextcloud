@@ -11,7 +11,8 @@ nextcloud_db_name: nextcloud
 nextcloud_db_user: nexctloud-db-admin
 # nextcloud_db_pass: 'xxxYYY'
 
-nextcloud_php_version: php7.2
+nextcloud_php_version: 7.4
+php_memory_limit: 512M
 
 # === Nginx settings: ==
 # All the following settings will eventually be passed on to the mediafellows.nginx role.
