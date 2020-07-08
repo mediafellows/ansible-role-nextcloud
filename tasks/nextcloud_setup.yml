@@ -35,13 +35,9 @@
     remote_src: true
   when: nextcloud_needs_install
 
-- name: Set Nextcloud parent dir (above install dir)
-  set_fact:
-    nextcloud_parent_dir: "{{ nextcloud_install_dir|split('/')[0:-1]|join('/') }}"
-
 - name: Make sure Nextcloud parent dir exists
   file:
-    path: '{{ nextcloud_parent_dir }}'
+    path: '{{ nextcloud_install_dir | dirname }}'
     state: directory
   when: nextcloud_needs_install
 
@@ -56,9 +52,6 @@
 - name: Cleanup install files
   file:
     path: /tmp/nextcloud.zip
-    state: absent
-- file:
-    path: /tmp/nextcloud
     state: absent
 
 - name: Copy config.php into place for initial setup
