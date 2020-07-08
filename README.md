@@ -44,6 +44,10 @@ Example playbook integration
   vars:
     nextcloud_version: 19.0.0
     nextcloud_install_dir: /opt/nextcloud/
+    nextcloud_instance_id: '123abcdefg90'
+    nextcloud_password_salt: '3LuwJHqsdf123412sdfdfcbvcvb'
+    nextcloud_secret: 'supersecret-secret'
+    nextcloud_db_pass: 'nextcloud-db-pw'
   roles:
     - mediafellows.nextcloud
 ```
