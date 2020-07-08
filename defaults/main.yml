@@ -10,8 +10,12 @@ nextcloud_db_host: localhost
 nextcloud_db_name: nextcloud
 nextcloud_db_user: nexctloud-db-admin
 # nextcloud_db_pass: 'xxxYYY'
+nextcloud_db_port: 5432
 
+# Please set those variables yourself:
 # nextcloud_instance_id: xxxXXX
+# nextcloud_password_salt: 'Long-randmon-string'
+# nextcloud_secret: 'long-random-string'
 
 nextcloud_php_version: 7.4
 php_memory_limit: 512M
