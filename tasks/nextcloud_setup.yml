@@ -60,7 +60,7 @@
     dest: '{{ nextcloud_install_dir }}/config/config.php'
     mode: 0640
     owner: www-data
-    owner: www-data
+    group: www-data
 
 - name: Setup Nextcloud Data dir (for storing uploaded files) with Ngxinx permissions
   file:
