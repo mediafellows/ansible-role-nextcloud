@@ -10,10 +10,10 @@
     path: "{{ nextcloud_install_dir }}/version.php"
     line: "$OC_VersionString = '19.0.0';"
     state: present
-    # only check if line would be added (when not present yet)
-    check_mode: true
-    # ingore errors, like when file doesn't exist yet
-    ignore_errors: true
+  # only check if line would be added (when not present yet)
+  check_mode: true
+  # ingore errors, like when file doesn't exist yet
+  ignore_errors: true
   register: has_version
 
 - name: Set variable to determine if update/install needed
