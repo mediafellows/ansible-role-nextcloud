@@ -35,21 +35,22 @@
     remote_src: true
   when: nextcloud_needs_install
 
-- name: Make sure Nextcloud install dir exists
+- name: Set Nextcloud parent dir (above install dir)
+  set_fact:
+    nextcloud_parent_dir: "{{ nextcloud_install_dir|split('/')[0:-1]|join('/') }}"
+
+- name: Make sure Nextcloud parent dir exists
   file:
-    path: '{{ nextcloud_install_dir }}'
+    path: '{{ nextcloud_parent_dir }}'
     state: directory
-    owner: www-data
-    group: www-data
   when: nextcloud_needs_install
 
 - name: Move unzipped nextloud dir to install dir
-  copy:
-    src: /tmp/nextcloud
-    dest: '{{ nextcloud_install_dir }}'
-    remote_src: true
-    owner: www-data
-    group: www-data
+  command: 'mv /tmp/nextcloud {{ nextcloud_install_dir }}'
+  when: nextcloud_needs_install
+
+- name: Move unzipped nextloud dir to install dir
+  command: 'chown www-data:www-data -R {{ nextcloud_install_dir }}'
   when: nextcloud_needs_install
 
 - name: Cleanup install files

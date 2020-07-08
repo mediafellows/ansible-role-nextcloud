@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe 'Nginx setup' do
+  nginx_conf_dir = '/etc/nginx'
+
  describe file("#{nginx_conf_dir}/nginx.conf") do
     it { should be_file }
     config_string = ANSIBLE_VARS.fetch('nginx_http_params', 'FAIL').join(";\n  ")
