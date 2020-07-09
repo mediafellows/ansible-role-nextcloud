@@ -6,10 +6,18 @@ nextcloud_version: 19.0.0
 nextcloud_install_dir: /opt/nextcloud
 nextcloud_data_dir: /data/nextcloud
 
+# Linux User to run Nextcloud, match with Nginx user
+nextcloud_user: www-data
+nextcloud_group: www-data
+
+# Initial admin user created when installing Nextcloud
+nextcloud_initial_user_name: admin
+nextcloud_initial_user_pw: 'foobar'
+
 nextcloud_db_type: postgresql
 nextcloud_db_host: localhost
 nextcloud_db_name: nextcloud
-nextcloud_db_user: nexctloud-db-admin
+nextcloud_db_user: nexctloud-db-user
 # nextcloud_db_pass: 'xxxYYY'
 nextcloud_db_port: 5432
 

@@ -46,7 +46,7 @@
   when: nextcloud_needs_install
 
 - name: Move unzipped nextloud dir to install dir
-  command: 'chown www-data:www-data -R {{ nextcloud_install_dir }}'
+  command: 'chown {{ nextcloud_user }}:{{ nextcloud_group }} -R {{ nextcloud_install_dir }}'
   when: nextcloud_needs_install
 
 - name: Cleanup install files
@@ -54,17 +54,15 @@
     path: /tmp/nextcloud.zip
     state: absent
 
-- name: Copy config.php into place for initial setup
-  template:
-    src: nextcloud-config.php.j2
-    dest: '{{ nextcloud_install_dir }}/config/config.php'
-    mode: 0640
-    owner: root
-    group: root
+- name: Run OCC install task
+  shell: 'sudo -u {{ nextcloud_user }} php{{ nextcloud_php_version }} occ maintenance:install --database "{{ nextcloud_db_type }}" --database-host "{{ nextcloud_db_host }}:{{ nextcloud_db_port }}" --database-name "{{ nextcloud_db_name }}" --database-user "{{ nextcloud_db_user }}" --database-pass "{{ nextcloud_db_pass }}" --data-dir "{{ nextcloud_data_dir }}" --admin-user "{{ nextcloud_initial_user_name }}" --admin-pass "{{ nextcloud_initial_user_pw }}"'
+  args:
+    chdir: "{{ nextcloud_install_dir }}"
+  creates: "{{ nextcloud_install_dir }}/config/config.php"
 
 - name: Setup Nextcloud Data dir (for storing uploaded files) with Ngxinx permissions
   file:
     path: '{{ nextcloud_data_dir }}'
     state: directory
-    owner: www-data
-    group: www-data
+    owner: "{{ nextcloud_user }}"
+    group: "{{ nextcloud_group }}"

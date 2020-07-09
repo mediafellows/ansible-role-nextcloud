@@ -4,9 +4,7 @@
   become: true
   vars:
     nextcloud_version: 19.0.0
-    nextcloud_instance_id: '123abcdefg90'
-    nextcloud_password_salt: '3LuwJHqsdf123412sdfdfcbvcvb'
-    nextcloud_secret: 'supersecret-secret'
-    nextcloud_db_pass: 'nextcloud-db-pw'
+    nextcloud_initial_user_name: admin
+    nextcloud_initial_user_pw: abc123abc
   roles:
     - ansible-role-nextcloud

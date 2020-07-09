@@ -19,11 +19,14 @@ Linux Distribution with apt package manager. Ideally newer versions (like Ubuntu
 
 Role variables that make sense to override to your needs (shows default settings here):
 
-- `nextcloud_install_dir: /opt/nextcloud` - Install dir where Nextcloud will be unpacked
 - `nextcloud_version: 19.0.0` - Nextcloud version to install, pick one that can be downloaded from download server already
-- `nextcloud_php_version: php7.2` - PHP version to install. Ensure this version is in the apt repo of your distro already (this role won't add any additional repos)
-- `nextcloud_intance_id: 'xxx12312'` - Unique identifier for Nextcloud installation
+- `nextcloud_php_version: 7.4` - PHP version to install
+- `nextcloud_db_type: postgresql` - DB type to use for Nextcloud. Either mysql or postgresql is supported by this role
+- `nextcloud_db_user: nextcloud` - User for connecting to DB
 - `nextcloud_db_pass: 1231231` - PW for DB access
+- `nextcloud_install_dir: /opt/nextcloud` - Install dir where Nextcloud will be unpacked
+- `nextcloud_initial_user_name: admin` - Set username for initial admin user
+- `nextcloud_initial_user_pw: 'foobar'` - Set PW for initial admin user for your Nextcloud setup (for first login)
 
 Find more variables in defaults/main.yml
 
@@ -44,9 +47,8 @@ Example playbook integration
   vars:
     nextcloud_version: 19.0.0
     nextcloud_install_dir: /opt/nextcloud/
-    nextcloud_instance_id: '123abcdefg90'
-    nextcloud_password_salt: '3LuwJHqsdf123412sdfdfcbvcvb'
-    nextcloud_secret: 'supersecret-secret'
+    nextcloud_initial_user_name: admin
+    nextcloud_initial_user_pw: abc123abc
     nextcloud_db_pass: 'nextcloud-db-pw'
   roles:
     - mediafellows.nextcloud
