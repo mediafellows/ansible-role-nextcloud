@@ -81,5 +81,5 @@
 
 - name: OCC install debug out
   debug:
-    var: occ_install_result
+    var: occ_install_result.stdout
 
