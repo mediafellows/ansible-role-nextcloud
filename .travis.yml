@@ -14,6 +14,9 @@ install:
   # Install ansible
   - pip3 install ansible yamllint
 
+  # Create Nextcloud DB for testing
+  - psql -c 'CREATE DATABASE nextcloud;' -U postgres
+
   # Add role dependency (mediafellows.nginx)
   - wget -O mediafellows.nginx.zip https://github.com/mediafellows/ansible-role-nginx/archive/master.zip && unzip mediafellows.nginx.zip
   - rm mediafellows.nginx.zip
