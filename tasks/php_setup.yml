@@ -28,23 +28,9 @@
       - 'php{{ nextcloud_php_version }}-bcmath'
       - 'php{{ nextcloud_php_version }}-gmp'
       - php-imagick
+      # DB client lib
+      - 'php{{ nextcloud_php_version }}-{{ nextcloud_db_type }}'
     state: present
-  notify:
-    - restart php-fpm
-
-- name: Install DB specifig PHP package PostgreSQL
-  apt:
-    name: 'php{{ nextcloud_php_version }}-pgsql'
-    state: present
-  when: nextcloud_db_type == 'postgresql'
-  notify:
-    - restart php-fpm
-
-- name: Install DB specifig PHP package for MySQL
-  apt:
-    name: 'php{{ nextcloud_php_version }}-mysql'
-    state: present
-  when: nextcloud_db_type == 'mysql'
   notify:
     - restart php-fpm
 

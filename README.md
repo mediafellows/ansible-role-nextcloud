@@ -1,15 +1,12 @@
 # Ansible Role for Nextcloud Server setup
 
-Ansible Role that sets up Nextcloud (with Nginx) on an Ubuntu/Debian server. Unlike other Ansible roles for Nextcloud this role doesn't install any Databases.
+Ansible Role that sets up Nextcloud with Nginx and PHP on an Ubuntu/Debian server. Designed to not handle DB install and HTTPS setup. So this role is uesefull when running 
+behind a Loabalancer that takes care of HTTPs termination already. Also if you want to run your DB on another host, this role doesn't preinstall a DB for you.
 
-This role installs PHP debendencies and  installs the PHP runner FastCGI Process Manager ([FPM](https://www.php.net/manual/de/install.fpm.php)).
+If you want to setup a DB on that host just use another Ansible role for Postgres or MySQL. For example there is [mediafellows.postgresql](https://github.com/mediafellows/ansible-role-postgresql).
+
+This role installs PHP dependencies and  installs the PHP runner FastCGI Process Manager ([FPM](https://www.php.net/manual/de/install.fpm.php)).
 It also utilizes [mediafellows.nginx](https://github.com/mediafellows/ansible-role-nginx) role for installing Ngxinx as a Websterver.
-
-For installing other webservers, databases etc use other roles, such as
-- [mediafellows.postgresql](https://github.com/mediafellows/ansible-role-postgresql)
-
-Or any other Role that fits your needs (like MySQL, MariaDB, Redis or other PosgreSQL roles).
-This also allows for you to run Databases like Relational DB and Redis on other hosts for example. Which would be common if you have managed DBs in a cloud environment.
 
 ## Requirements
 
@@ -21,7 +18,7 @@ Role variables that make sense to override to your needs (shows default settings
 
 - `nextcloud_version: 19.0.0` - Nextcloud version to install, pick one that can be downloaded from download server already
 - `nextcloud_php_version: 7.4` - PHP version to install
-- `nextcloud_db_type: postgresql` - DB type to use for Nextcloud. Either mysql or postgresql is supported by this role
+- `nextcloud_db_type: pgsql` - DB type to use for Nextcloud. Either 'mysql', 'pgsql' (for Postgres) or 'sqlite' (untested).
 - `nextcloud_db_user: nextcloud` - User for connecting to DB
 - `nextcloud_db_pass: 1231231` - PW for DB access
 - `nextcloud_install_dir: /opt/nextcloud` - Install dir where Nextcloud will be unpacked

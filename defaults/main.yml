@@ -12,7 +12,7 @@ nextcloud_initial_user_name: admin
 nextcloud_initial_user_pw: 'foobar'
 
 # Nextcloud DB settings, please override to your needs:
-nextcloud_db_type: postgresql
+nextcloud_db_type: pqsql
 nextcloud_db_host: localhost
 nextcloud_db_name: nextcloud
 nextcloud_db_user: nexctloud-db-user
