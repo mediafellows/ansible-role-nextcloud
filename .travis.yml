@@ -43,6 +43,10 @@ script:
   # Run the test playbook with ansible-playbook
   - ansible-playbook -i tests/inventory tests/test.yml --connection=local
 
+  # Run the test playbook again to check idempotence
+  - ansible-playbook -i tests/inventory tests/test.yml --connection=local
+
+  # Some debug outputs
   - ls -lh /opt/nextcloud/
   - ls -lh /opt/nextcloud/config/
   - sudo cat /opt/nextcloud/config/config.php

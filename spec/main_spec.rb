@@ -31,9 +31,9 @@ end
 describe 'Nextcloud setup' do
   install_dir = ANSIBLE_VARS.fetch('nextcloud_install_dir', 'UNDEFINED')
   data_dir = ANSIBLE_VARS.fetch('nextcloud_data_dir', 'UNDEFINED')
-  nextcloud_user = ANSIBLE_VARS.fetch('nextcloud_user', 'UNDEFINED')
-  nextcloud_group = ANSIBLE_VARS.fetch('nextcloud_group', 'UNDEFINED')
   nextcloud_db_user = ANSIBLE_VARS.fetch('nextcloud_db_user', 'UNDEFINED')
+  nextcloud_user = 'www-data'
+  nextcloud_group = 'www-data'
 
   describe file(install_dir) do
     it { should be_directory }

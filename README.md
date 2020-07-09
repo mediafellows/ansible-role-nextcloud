@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/mediafellows/ansible-role-nextcloud.svg?branch=master)](https://travis-ci.com/mediafellows/ansible-role-nextcloud)
+
 # Ansible Role for Nextcloud Server setup
 
 Ansible Role that sets up Nextcloud with Nginx and PHP on an Ubuntu/Debian server. Designed to not handle DB install and HTTPS setup. So this role is uesefull when running 
