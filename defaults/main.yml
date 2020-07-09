@@ -28,10 +28,6 @@ nextcloud_db_port: 5432
 nextcloud_php_version: 7.4
 php_memory_limit: 512M
 
-# Linux User to run Nextcloud, match with Nginx user (shouldn't be changed)
-nextcloud_user: www-data
-nextcloud_group: www-data
-
 # === Nginx settings: ==
 # All the following settings will eventually be passed on to the mediafellows.nginx role.
 

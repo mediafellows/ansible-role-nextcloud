@@ -28,7 +28,7 @@ server {
   add_header X-Permitted-Cross-Domain-Policies "none" always;
   add_header X-Robots-Tag "none" always;
   add_header X-XSS-Protection "1; mode=block" always;
-  
+
   # Remove X-Powered-By, which is an information leak
   fastcgi_hide_header X-Powered-By;
 
@@ -42,8 +42,8 @@ server {
     access_log off;
   }
 
-  # Cardav/ Caldav redirects 
-  
+  # Cardav/ Caldav redirects
+
   location = /.well-known/carddav {
     return 301 https://$host/remote.php/dav;
   }
@@ -76,7 +76,7 @@ server {
   location ~ ^\/(?:\.|autotest|occ|issue|indie|db_|console) {
     deny all;
   }
-    
+
   # Enable PHP through fastcgi
   location ~ ^\/(?:index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[ms]-provider\/.+|.+\/richdocumentscode\/proxy)\.php(?:$|\/) {
     fastcgi_split_path_info ^(.+?\.php)(\/.*|)$;
@@ -99,8 +99,8 @@ server {
 
   # S.th. for the updater?
   location ~ ^\/(?:updater|oc[ms]-provider)(?:$|\/) {
-      try_files $uri/ =404;
-      index index.php;
+    try_files $uri/ =404;
+    index index.php;
   }
 
   # Adding the cache control header for JS and CSS files

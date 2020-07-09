@@ -1,7 +1,12 @@
 ---
 # vars file for mediafellows.nextcloud
 
-# Nginx server settings for mediafellows.nginx:
+# Linux User to run Nextcloud, match with Nginx user
+nextcloud_user: "{{ nginx_user }}"
+nextcloud_group: "{{ nginx_group }}"
+
+# Nginx server settings for mediafellows.nginx role:
+# Global Nginx settings:
 nginx_http_params:
   - sendfile on
   - tcp_nopush on
@@ -15,8 +20,9 @@ nginx_http_params:
   - gzip_disable "msie6"
   - server_tokens off
   - log_format custom_access_log_format '{{ nginx_access_log_format }}'
-  - access_log "{{nginx_log_dir}}/access.log"
-  - error_log "{{nginx_log_dir}}/error.log"
+  - access_log "{{ nginx_log_dir }}/access.log"
+  - error_log "{{ nginx_log_dir }}/error.log"
+# Nextcloud site:
 nginx_sites:
   - name: nextcloud
     template_file: '../templates/nginx-site.conf.j2'
