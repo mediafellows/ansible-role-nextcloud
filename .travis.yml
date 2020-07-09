@@ -43,8 +43,9 @@ script:
   # Run the test playbook with ansible-playbook
   - ansible-playbook -i tests/inventory tests/test.yml --connection=local
 
-  - ls /opt/nextcloud/
-  - cat /opt/nextcloud/config/config.php
+  - ls -lh /opt/nextcloud/
+  - ls -lh /opt/nextcloud/config/
+  - sudo cat /opt/nextcloud/config/config.php
 
   # Run serverspec as root to be able to test everything
   - sudo rake spec

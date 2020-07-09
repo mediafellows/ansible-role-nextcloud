@@ -29,16 +29,28 @@ describe 'Nginx setup' do
 end
 
 describe 'Nextcloud setup' do
-  describe file('/opt/nextcloud') do
+  install_dir = ANSIBLE_VARS.fetch('nextcloud_install_dir', 'UNDEFINED')
+  data_dir = ANSIBLE_VARS.fetch('nextcloud_data_dir', 'UNDEFINED')
+  nextcloud_user = ANSIBLE_VARS.fetch('nextcloud_user', 'UNDEFINED')
+  nextcloud_group = ANSIBLE_VARS.fetch('nextcloud_group', 'UNDEFINED')
+  nextcloud_db_user = ANSIBLE_VARS.fetch('nextcloud_db_user', 'UNDEFINED')
+
+  describe file(install_dir) do
     it { should be_directory }
-    it { should be_owned_by('www-data') }
-    it { should be_grouped_into('www-data') }
+    it { should be_owned_by(nextcloud_user) }
+    it { should be_grouped_into(nextcloud_group) }
   end
 
-  describe file('/opt/nextcloud/config/config.php') do
+  describe file(data_dir) do
+    it { should be_directory }
+    it { should be_owned_by(nextcloud_user) }
+    it { should be_grouped_into(nextcloud_group) }
+  end
+
+  describe file("#{install_dir}/config/config.php") do
     it { should be_file }
-    it { should be_owned_by('root') }
-    it { should be_grouped_into('root') }
+    its(:content) { should include("'dbhost' => 'localhost'") }
+    its(:content) { should include("'dbuser' => '#{nextcloud_db_user}'") }
   end
 
   describe service("php7.4-fpm") do
