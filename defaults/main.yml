@@ -38,6 +38,7 @@ nextcloud_domain: dummy-domain.com
 # mark this apps Nginx as default server, should only be one per Nginx instance!
 nginx_default_server: false
 nginx_log_dir: /var/log/nginx
+nginx-user: www-data
 nginx_access_log_format: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" real_ip=$http_x_forwarded_for msec=$msec connection=$connection connection_requests=$connection_requests millis=$request_time'
 # max request body size Nginx allows (default 1MB)
 nginx_client_body_size: 1m
