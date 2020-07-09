@@ -25,7 +25,6 @@ rules:
     max: 180
     ignore: |
       defaults/main.yml
-      tasks/nextcloud_setup.yml
   new-lines:
     type: unix
   indentation:
