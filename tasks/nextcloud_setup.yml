@@ -54,12 +54,20 @@
     path: /tmp/nextcloud.zip
     state: absent
 
+- name: Setup Nextcloud Data dir (for storing uploaded files) with Ngxinx permissions
+  file:
+    path: '{{ nextcloud_data_dir }}'
+    state: directory
+    owner: "{{ nextcloud_user }}"
+    group: "{{ nextcloud_group }}"
+
 - name: Run OCC install task
   shell:
     cmd: |
       sudo -u {{ nextcloud_user }} php{{ nextcloud_php_version }} occ maintenance:install \
       --database "{{ nextcloud_db_type }}" \
-      --database-host "{{ nextcloud_db_host }}:{{ nextcloud_db_port }}" \
+      --database-host "{{ nextcloud_db_host }}" \
+      --database-port "{{ nextcloud_db_port }}" \
       --database-name "{{ nextcloud_db_name }}" \
       --database-user "{{ nextcloud_db_user }}" \
       --database-pass "{{ nextcloud_db_pass }}" \
@@ -69,9 +77,3 @@
     chdir: "{{ nextcloud_install_dir }}"
     creates: "{{ nextcloud_install_dir }}/config/config.php"
 
-- name: Setup Nextcloud Data dir (for storing uploaded files) with Ngxinx permissions
-  file:
-    path: '{{ nextcloud_data_dir }}'
-    state: directory
-    owner: "{{ nextcloud_user }}"
-    group: "{{ nextcloud_group }}"
