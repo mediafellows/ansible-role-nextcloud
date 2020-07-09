@@ -2,32 +2,35 @@
 # defaults file for mediafellows.nextcloud
 
 nextcloud_version: 19.0.0
-# no trailing slashes allowed!
+
+# Paths, no trailing slashes allowed!
 nextcloud_install_dir: /opt/nextcloud
 nextcloud_data_dir: /data/nextcloud
-
-# Linux User to run Nextcloud, match with Nginx user
-nextcloud_user: www-data
-nextcloud_group: www-data
 
 # Initial admin user created when installing Nextcloud
 nextcloud_initial_user_name: admin
 nextcloud_initial_user_pw: 'foobar'
 
+# Nextcloud DB settings, please override to your needs:
 nextcloud_db_type: postgresql
 nextcloud_db_host: localhost
 nextcloud_db_name: nextcloud
 nextcloud_db_user: nexctloud-db-user
-# nextcloud_db_pass: 'xxxYYY'
+nextcloud_db_pass: ''
 nextcloud_db_port: 5432
 
-# Please set those variables yourself:
+# variables only needed when placing config.php from template (currently commented task)
 # nextcloud_instance_id: xxxXXX
 # nextcloud_password_salt: 'Long-randmon-string'
 # nextcloud_secret: 'long-random-string'
 
+# PHP settings
 nextcloud_php_version: 7.4
 php_memory_limit: 512M
+
+# Linux User to run Nextcloud, match with Nginx user (shouldn't be changed)
+nextcloud_user: www-data
+nextcloud_group: www-data
 
 # === Nginx settings: ==
 # All the following settings will eventually be passed on to the mediafellows.nginx role.
