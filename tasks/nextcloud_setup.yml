@@ -1,10 +1,5 @@
 ---
 
-- name: Download Nextcloud version {{ nextcloud_version }}
-  get_url:
-    url: 'https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.zip'
-    dest: '/tmp/nextcloud.zip'
-
 - name: Test if requested version is already installed
   lineinfile:
     path: "{{ nextcloud_install_dir }}/version.php"
@@ -27,6 +22,12 @@
 - name: Output if install needed
   debug:
     var: nextcloud_needs_install
+
+- name: Download Nextcloud version {{ nextcloud_version }}
+  get_url:
+    url: 'https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.zip'
+    dest: '/tmp/nextcloud.zip'
+  when: nextcloud_needs_install
 
 - name: Unzip Nextcloud package (contains nextcloud dir)
   unarchive:
@@ -61,7 +62,7 @@
     owner: "{{ nextcloud_user }}"
     group: "{{ nextcloud_group }}"
 
-- name: Run OCC install task
+- name: Run OCC install task for initial Nextcloud setup
   shell:
     cmd: |
       sudo -u {{ nextcloud_user }} php{{ nextcloud_php_version }} occ maintenance:install \
@@ -76,4 +77,9 @@
       --admin-pass "{{ nextcloud_initial_user_pw }}"
     chdir: "{{ nextcloud_install_dir }}"
     creates: "{{ nextcloud_install_dir }}/config/config.php"
+  register: occ_install_result
+
+- name: OCC install debug out
+  debug:
+    var: occ_install_result
 
