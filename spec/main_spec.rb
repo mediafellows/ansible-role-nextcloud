@@ -49,8 +49,9 @@ describe 'Nextcloud setup' do
 
   describe file("#{install_dir}/config/config.php") do
     it { should be_file }
-    its(:content) { should include("'dbhost' => 'localhost'") }
-    its(:content) { should include("'dbuser' => '#{nextcloud_db_user}'") }
+    its(:content) { should include("'dbhost' => 'localhost:5432'") }
+    its(:content) { should include("'dbname' => 'nextcloud'") }
+    # its(:content) { should include("'dbuser' => '#{nextcloud_db_user}'") }
   end
 
   describe service("php7.4-fpm") do
