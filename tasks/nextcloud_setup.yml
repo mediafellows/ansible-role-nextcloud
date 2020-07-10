@@ -87,7 +87,7 @@
 
 - name: Run OCC command to add trusted domain
   shell:
-    cmd: sudo -u {{ nextcloud_user }} php{{ nextcloud_php_version }} occ config:system:set trusted_domains 0 --value {{ nextcloud_php_domain }}
+    cmd: sudo -u {{ nextcloud_user }} php{{ nextcloud_php_version }} occ config:system:set trusted_domains 0 --value {{ nextcloud_domain }}
     chdir: "{{ nextcloud_install_dir }}"
   register: occ_domain_result
   when: not nextcloud_restore_config|bool
