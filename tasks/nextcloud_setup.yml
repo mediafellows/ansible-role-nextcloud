@@ -78,8 +78,29 @@
     chdir: "{{ nextcloud_install_dir }}"
     creates: "{{ nextcloud_install_dir }}/config/config.php"
   register: occ_install_result
+  when: not nextcloud_restore_config|bool
 
 - name: OCC install debug out
   debug:
     var: occ_install_result.stdout
+  when: not nextcloud_restore_config|bool
 
+- name: Run OCC command to add trusted domain
+  shell:
+    cmd: sudo -u {{ nextcloud_user }} php{{ nextcloud_php_version }} occ config:system:set trusted_domains 0 --value {{ nextcloud_php_domain }}
+    chdir: "{{ nextcloud_install_dir }}"
+  register: occ_domain_result
+  when: not nextcloud_restore_config|bool
+
+- name: OCC trusted domain debug out
+  debug:
+    var: occ_domain_result.stdout
+
+- name: Restore Nextcloud config.php to settings from role vars
+  template:
+    src: nextcloud-config.php.j2
+    dest: "{{ nextcloud_install_dir }}/config/config.php"
+    mode: 0640
+    owner: root
+    group: root
+  when: nextcloud_restore_config|bool

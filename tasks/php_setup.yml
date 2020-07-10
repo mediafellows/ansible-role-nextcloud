@@ -31,6 +31,7 @@
       # DB client lib
       - 'php{{ nextcloud_php_version }}-{{ nextcloud_db_type }}'
     state: present
+  register: php_package_install
   notify:
     - restart php-fpm
 
@@ -41,3 +42,17 @@
     line: "memory_limit = {{ php_memory_limit }}"
   notify:
     - restart php-fpm
+
+- name: Update OPcache settings in PHP ini
+  blockinfile:
+    path: /etc/php/{{ nextcloud_php_version }}/fpm/php.ini
+    insertafter: ';opcache.enable=1'
+    marker: '; -- Ansible managed block --'
+    block: |
+      opcache.enable=1
+      opcache.interned_strings_buffer=8
+      opcache.max_accelerated_files=10000
+      opcache.memory_consumption=512
+      opcache.save_comments=1
+      opcache.revalidate_freq=2
+  when: php_package_install.changed

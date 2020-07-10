@@ -1,6 +1,7 @@
 ---
 # defaults file for mediafellows.nextcloud
 
+nextcloud_domain: dummy-domain.com
 nextcloud_version: 19.0.0
 
 # Paths, no trailing slashes allowed!
@@ -19,7 +20,10 @@ nextcloud_db_user: nexctloud-db-user
 nextcloud_db_pass: ''
 nextcloud_db_port: 5432
 
-# variables only needed when placing config.php from template (currently commented task)
+# Set this to true if you don't start with a fresh DB and just want to restore the config.php with
+# an existing DB dump. If true use below variables to fill out config.php with same values again
+nextcloud_restore_config: false
+# variables only needed when placing config.php from template
 # nextcloud_instance_id: xxxXXX
 # nextcloud_password_salt: 'Long-randmon-string'
 # nextcloud_secret: 'long-random-string'
@@ -34,7 +38,6 @@ php_memory_limit: 512M
 # /run or /var/run?
 nextcloud_fpm_socket: /run/php/php{{ nextcloud_php_version }}-fpm.sock
 
-nextcloud_domain: dummy-domain.com
 # mark this apps Nginx as default server, should only be one per Nginx instance!
 nginx_default_server: false
 nginx_log_dir: /var/log/nginx
