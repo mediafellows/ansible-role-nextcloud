@@ -104,3 +104,11 @@
     owner: root
     group: root
   when: nextcloud_restore_config|bool
+
+- name: Setup Nextcloud Cron trigger (every 5 minutes)
+  cron:
+    name: 'nextcloud-cron-trigger'
+    job: 'php{{ nextcloud_php_version }} -f {{ nextcloud_install_dir }}/cron.php'
+    user: '{{ nextcloud_user }}'
+    minutes: '*/5'
+    state: present
