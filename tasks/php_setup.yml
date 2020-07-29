@@ -1,5 +1,10 @@
 ---
 
+- name: Install imagemagick system package needed for Nextcloud features (and php-imagick)
+  apt:
+    name: imagemagick
+    state: present
+
 - name: Add PHP PPA to allow installing of all recent PHP version
   apt_repository:
     repo: ppa:ondrej/php
