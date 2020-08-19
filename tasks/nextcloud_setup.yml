@@ -3,7 +3,7 @@
 - name: Test if requested version is already installed
   lineinfile:
     path: "{{ nextcloud_install_dir }}/version.php"
-    line: "$OC_VersionString = '19.0.0';"
+    line: "$OC_VersionString = '{{ nextcloud_version }}';"
     state: present
   # only check if line would be added (when not present yet)
   check_mode: true
