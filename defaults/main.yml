@@ -52,3 +52,7 @@ keep_only_specified: false
 # if behind a loadbalancer that does TLS offloading you usually use
 # http_x_forwarded_proto otherwise scheme.
 client_protocol_header: 'http_x_forwarded_proto'
+
+# If behind a loablancer you should also configure those values (uses ngx_http_realip_module module!):
+# loabalander_ip_cidr: 10.50.1.0./32
+client_ip_header: 'X-Forwarded-For'
