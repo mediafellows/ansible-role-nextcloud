@@ -29,7 +29,7 @@ nextcloud_restore_config: false
 # nextcloud_secret: 'long-random-string'
 
 # PHP settings
-nextcloud_php_version: 7.4
+nextcloud_php_version: 8.4
 php_memory_limit: 512M
 
 # === Nginx settings: ==
