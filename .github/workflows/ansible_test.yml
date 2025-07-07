@@ -38,7 +38,7 @@ jobs:
           ansible --version
 
       - name: Create Nextcloud DB for testing
-        run: psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE nextcloud;'
+        run: PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE nextcloud;'
 
       - name: Add nginx role dependency (mediafellows.nginx)
         run: |
