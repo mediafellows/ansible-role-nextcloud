@@ -1,0 +1,75 @@
+---
+
+name: Ansible-Test
+on: [ push, pull_request ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.2
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 2s
+          --health-retries 15
+    steps:
+
+      - name: Checkout code from Github
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.10.14
+
+      - name: Install latest Ansible through pip
+        run: pip install ansible yamllint
+
+      - name: Output python and ansible versions
+        run: |
+          python --version
+          ansible --version
+
+      - name: Create Nextcloud DB for testing
+        run: PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE nextcloud;'
+
+      - name: Add nginx role dependency (mediafellows.nginx)
+        run: |
+          wget -O mediafellows.nginx.zip https://github.com/mediafellows/ansible-role-nginx/archive/master.zip && unzip mediafellows.nginx.zip
+          rm mediafellows.nginx.zip
+          mv ansible-role-nginx-master tests/roles/mediafellows.nginx
+          ls tests/roles
+
+      - name: Basic linting with yamllint
+        run: yamllint .
+
+      - name: Create ansible.cfg with correct roles_path
+        run: printf '[defaults]\nroles_path=../' > ansible.cfg
+
+      - name: Basic Ansible role syntax check
+        run: ansible-playbook -i tests/inventory --syntax-check tests/test.yml
+
+      - name: Real Ansible run
+        run: ansible-playbook -i tests/inventory tests/test.yml --connection=local
+
+      - name: Second run to check for indempotence
+        run: "ansible-playbook -i tests/inventory tests/test.yml --connection=local | grep -q 'changed=2.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)"
+
+      - name: Some debug output
+        run: |
+          ls -lh /opt/nextcloud/
+          ls -lh /opt/nextcloud/config/
+          sudo cat /opt/nextcloud/config/config.php
+
+      - name: Setup serverspec (install gem)
+        run: sudo gem install serverspec
+
+      - name: Run serverspec (as root to see all files)
+        run: sudo rake spec

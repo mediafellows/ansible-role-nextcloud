@@ -23,7 +23,6 @@
       # Extra modules
       - 'php{{ nextcloud_php_version }}-curl'
       - 'php{{ nextcloud_php_version }}-gd'
-      - 'php{{ nextcloud_php_version }}-json'
       - 'php{{ nextcloud_php_version }}-mbstring'
       - 'php{{ nextcloud_php_version }}-opcache'
       - 'php{{ nextcloud_php_version }}-readline'

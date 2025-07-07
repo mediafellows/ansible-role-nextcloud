@@ -54,7 +54,7 @@ describe 'Nextcloud setup' do
     # its(:content) { should include("'dbuser' => '#{nextcloud_db_user}'") }
   end
 
-  describe service("php7.4-fpm") do
+  describe service("php8.4-fpm") do
     it { should be_running }
   end
 end

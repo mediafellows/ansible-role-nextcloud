@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/mediafellows/ansible-role-nextcloud.svg?branch=master)](https://travis-ci.com/mediafellows/ansible-role-nextcloud)
+[![Ansible-Test](https://github.com/mediafellows/ansible-role-nextcloud/actions/workflows/ansible_test.yml/badge.svg)](https://github.com/mediafellows/ansible-role-nextcloud/actions/workflows/ansible_test.yml)
 
 # Ansible Role for Nextcloud Server setup
 
@@ -18,8 +18,8 @@ Linux Distribution with apt package manager. Ideally newer versions (like Ubuntu
 
 Role variables that make sense to override to your needs (shows default settings here):
 
-- `nextcloud_version: 19.0.0` - Nextcloud version to install, pick one that can be downloaded from download server already
-- `nextcloud_php_version: 7.4` - PHP version to install
+- `nextcloud_version: 31.0.5` - Nextcloud version to install, pick one that can be downloaded from download server already
+- `nextcloud_php_version: 8.4` - PHP version to install
 - `nextcloud_db_type: pgsql` - DB type to use for Nextcloud. Either 'mysql', 'pgsql' (for Postgres) or 'sqlite' (untested).
 - `nextcloud_db_user: nextcloud` - User for connecting to DB
 - `nextcloud_db_pass: 1231231` - PW for DB access
@@ -44,7 +44,7 @@ Example playbook integration
   hosts: nextcloud_hosts
   become: true
   vars:
-    nextcloud_version: 19.0.0
+    nextcloud_version: 31.0.5
     nextcloud_install_dir: /opt/nextcloud/
     nextcloud_initial_user_name: admin
     nextcloud_initial_user_pw: abc123abc

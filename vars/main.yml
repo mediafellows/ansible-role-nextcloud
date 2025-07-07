@@ -22,6 +22,7 @@ nginx_http_params:
   - log_format custom_access_log_format '{{ nginx_access_log_format }}'
   - access_log "{{ nginx_log_dir }}/access.log"
   - error_log "{{ nginx_log_dir }}/error.log"
+nginx_extras_package_install: false
 # Nextcloud site:
 nginx_sites:
   - name: nextcloud
