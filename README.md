@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/mediafellows/ansible-role-nextcloud.svg?branch=master)](https://travis-ci.com/mediafellows/ansible-role-nextcloud)
+[![Ansible-Test](https://github.com/mediafellows/ansible-role-nextcloud/actions/workflows/ansible_test.yml/badge.svg)](https://github.com/mediafellows/ansible-role-nextcloud/actions/workflows/ansible_test.yml)
 
 # Ansible Role for Nextcloud Server setup
 
