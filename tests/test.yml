@@ -9,6 +9,6 @@
     nextcloud_db_host: localhost
     nextcloud_db_name: nextcloud
     nextcloud_db_user: postgres
-    nextcloud_db_pass: ''
+    nextcloud_db_pass: postgres
   roles:
     - ansible-role-nextcloud
