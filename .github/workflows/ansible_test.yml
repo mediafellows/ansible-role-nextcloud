@@ -40,9 +40,6 @@ jobs:
       - name: Create Nextcloud DB for testing
         run: PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE nextcloud;'
 
-      - name: Create PG debugging
-        run: PGPASSWORD=postgres psql -h localhost -U postgres -d nextcloud -c 'SHOW search_path;'
-
       - name: Add nginx role dependency (mediafellows.nginx)
         run: |
           wget -O mediafellows.nginx.zip https://github.com/mediafellows/ansible-role-nginx/archive/master.zip && unzip mediafellows.nginx.zip
